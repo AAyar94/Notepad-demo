@@ -16,7 +16,7 @@ public class NoteRepository implements INoteManager {
     @Override
     public void update(String targetId, NoteModel newNote) {
         for (NoteModel note : notes) {
-            if (note.getId() == targetId) {
+            if (note.getId().equals(targetId)) {
                 int index = notes.indexOf(note);
                 notes.set(index, newNote);
             }
@@ -25,7 +25,7 @@ public class NoteRepository implements INoteManager {
 
     @Override
     public void delete(String targetId) {
-        notes.removeIf(item -> item.getId() == targetId);
+        notes.removeIf(item -> item.getId().equals(targetId));
     }
 
     @Override
@@ -36,7 +36,7 @@ public class NoteRepository implements INoteManager {
     @Override
     public NoteModel findById(String targetId) {
         for (NoteModel note : notes){
-            if (note.getId() == targetId) {
+            if (note.getId().equals(targetId)) {
                 return note;
             }
         }

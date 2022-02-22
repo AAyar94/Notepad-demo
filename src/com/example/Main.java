@@ -2,9 +2,9 @@ package com.example;
 
 import com.example.model.NoteModel;
 
-import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  * Note App
@@ -12,10 +12,10 @@ import java.util.UUID;
  * -> Not olustur, sil, güncelle ve tüm notları listele
  * <p>
  * Note {
-      id: String,
-      title: String,
-      content: String,
-      publishDateInMillis: Long,
+ * id: String,
+ * title: String,
+ * content: String,
+ * publishDateInMillis: Long,
  * }
  * <p>
  * <p>
@@ -37,7 +37,7 @@ public class Main {
                     "1- Add note\n" +
                             "2- Update note\n" +
                             "3- Delete note\n" +
-                            "4- Find note by id\n" +
+                            "4- Find note\n" +
                             "5- Get all notes\n"
             );
 
@@ -61,20 +61,99 @@ public class Main {
                     break;
                 }
                 case 2: {
-                    // Update note
+                    // Update note by index of list
+
+                    List<NoteModel> notes = repository.getAll();
+                    if (notes.isEmpty()){
+                        System.out.println("There is no any note here");
+                        break;
+                    }
+                    for (int i = 0; i < notes.size(); i++) {
+                        System.out.println(i + 1 + "-" + notes.get(i).getTitle() + "\n" + notes.get(i).getContent());
+                    }
+
+                    System.out.println("Enter index which you want to update...");
+                    int index = Integer.parseInt(menuScanner.next()) - 1;
+
+                    String targetId = notes.get(index).getId();
+
+                    System.out.println("Enter new title");
+                    String updatedTitle = menuScanner.next();
+
+                    System.out.println("Enter new content");
+                    String updatedContent = menuScanner.next();
+
+                    NoteModel newNote = new NoteModel(targetId);
+                    newNote.setTitle(updatedTitle);
+                    newNote.setContent(updatedContent);
+                    newNote.setPublishDateInMillis(System.currentTimeMillis());
+
+                    repository.update(targetId, newNote);
+
+                    System.out.println("Update successfully!");
+                    break;
                 }
                 case 3: {
                     // Delete note
+                    List<NoteModel> notes = repository.getAll();
+                    if (notes.isEmpty()){
+                        System.out.println("There is no any note here");
+                        break;
+                    }
+                    for (int i = 0; i < notes.size(); i++) {
+                        System.out.println(i + 1 + "-" + notes.get(i).getTitle());
+                    }
+
+                    System.out.println("Enter index which you want to delete...");
+                    int index = Integer.parseInt(menuScanner.next()) - 1;
+
+                    String targetId = notes.get(index).getId();
+
+                    repository.delete(targetId);
+
+                    System.out.println("Deleted successfully!");
+                    break;
                 }
                 case 4: {
                     // Find note by id
+                    List<NoteModel> notes = repository.getAll();
+                    if (notes.isEmpty()){
+                        System.out.println("There is no any note here");
+                        break;
+                    }
+                    for (int i = 0; i < notes.size(); i++) {
+                        System.out.println(i + 1 + "-" + notes.get(i).getTitle());
+                    }
+
+                    System.out.println("Enter index which you want to show...");
+                    int index = Integer.parseInt(menuScanner.next()) - 1;
+
+                    String targetId = notes.get(index).getId();
+
+                    NoteModel result = repository.findById(targetId);
+
+                    System.out.println("\t\tNote Detail");
+                    System.out.println(
+                            "Id: " + result.getId() +
+                            "\nTitle: " + result.getTitle() +
+                            "\nContent: " + result.getContent() +
+                            "\nPublishDate: " + result.getPublishDateInMillis()
+                    );
+                    break;
                 }
                 case 5: {
                     // Get all notes
                     List<NoteModel> dataSource = repository.getAll();
                     // Lambda function
+                    Date dateForPublish = new Date();
                     for (int i = 0; i < dataSource.size(); i++) {
-                        System.out.println(i + 1 + "-" + dataSource.get(i).getTitle());
+                        NoteModel n = dataSource.get(i);
+                        dateForPublish.setTime(n.getPublishDateInMillis());
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+                        System.out.println(
+                                i + 1 + "-" + n.getTitle() + " (" + formatter.format(dateForPublish) + ")"
+                        );
                     }
                 }
             }
