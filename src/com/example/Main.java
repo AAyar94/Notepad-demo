@@ -3,8 +3,11 @@ package com.example;
 import com.example.model.NoteModel;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+import java.util.UUID;
+import com.example.EmptyChecker;
 
 /**
  * Note App
@@ -62,20 +65,20 @@ public class Main {
                 }
                 case 2: {
                     // Update note by index of list
-
-                    List<NoteModel> notes = repository.getAll();
+                    EmptyChecker checker = new EmptyChecker();
+                    /*List<NoteModel> notes = repository.getAll();
                     if (notes.isEmpty()){
                         System.out.println("There is no any note here");
                         break;
                     }
                     for (int i = 0; i < notes.size(); i++) {
                         System.out.println(i + 1 + "-" + notes.get(i).getTitle() + "\n" + notes.get(i).getContent());
-                    }
+                    }*/
 
                     System.out.println("Enter index which you want to update...");
                     int index = Integer.parseInt(menuScanner.next()) - 1;
 
-                    String targetId = notes.get(index).getId();
+                    String targetId = checker.notes.get(index).getId();
 
                     System.out.println("Enter new title");
                     String updatedTitle = menuScanner.next();
@@ -95,19 +98,12 @@ public class Main {
                 }
                 case 3: {
                     // Delete note
-                    List<NoteModel> notes = repository.getAll();
-                    if (notes.isEmpty()){
-                        System.out.println("There is no any note here");
-                        break;
-                    }
-                    for (int i = 0; i < notes.size(); i++) {
-                        System.out.println(i + 1 + "-" + notes.get(i).getTitle());
-                    }
+                    EmptyChecker checker = new EmptyChecker();
 
                     System.out.println("Enter index which you want to delete...");
                     int index = Integer.parseInt(menuScanner.next()) - 1;
 
-                    String targetId = notes.get(index).getId();
+                    String targetId = checker.notes.get(index).getId();
 
                     repository.delete(targetId);
 
@@ -116,19 +112,14 @@ public class Main {
                 }
                 case 4: {
                     // Find note by id
-                    List<NoteModel> notes = repository.getAll();
-                    if (notes.isEmpty()){
-                        System.out.println("There is no any note here");
-                        break;
-                    }
-                    for (int i = 0; i < notes.size(); i++) {
-                        System.out.println(i + 1 + "-" + notes.get(i).getTitle());
-                    }
+                    EmptyChecker checker = new EmptyChecker();
 
                     System.out.println("Enter index which you want to show...");
                     int index = Integer.parseInt(menuScanner.next()) - 1;
 
-                    String targetId = notes.get(index).getId();
+
+
+                    String targetId = checker.notes.get(index).getId();
 
                     NoteModel result = repository.findById(targetId);
 
